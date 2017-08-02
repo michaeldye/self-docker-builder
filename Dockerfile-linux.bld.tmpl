@@ -1,0 +1,21 @@
+FROM ##from_image##
+MAINTAINER mdye@us.ibm.com
+
+ARG ARCH=##arch##
+
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  cmake \
+  curl \
+  libpng12-dev \
+  python \
+  python-pip \
+  gettext \
+  libcurl4-openssl-dev \
+  unzip
+RUN pip install qibuild
+ADD http://1dd40.http.tor01.cdn.softlayer.net/intu/naoqi-sdk-2.1.4.13-linux64.tar.gz /self-docker-builder/packages/
+ARG CACHE_DATE=1977-06-27_15:17:32
+ADD . /self-docker-builder
+RUN bash -x /self-docker-builder/scripts/tc_install.sh linux
+WORKDIR /prj
