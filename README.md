@@ -10,16 +10,27 @@
 
 ### Steps
 
- * Create a `self-docker-builder` image and container instance with an invocation like this:
+ * Create a `self` image with an invocation like this:
 
         make self_DIR=$HOME/projects/self all
 
-(Note that if you invoke make without specifying `DOCKERB_OPTS`, Docker will ignore all cached build layers. To override this and get some work saving benefit, invoke make with the option `DOCKERB_OPTS=`)
+If you do not already have them available, this will build a `self-docker-builder-i` build image, run that image as a `self-docker-builder` container, compile the `self` source, extract the build artifacts, and create a slimmer runtime container with `self` inside it. If you want to perform just some of the above steps, consult the `Makefile` for targets you might run.
+
+Note that if you invoke a make target that builds a Docker container without specifying `DOCKERB_OPTS` or `DOCKERE_OPTS`, Docker will ignore all cached build layers (for the build container and execution container respectively). To override this and get some work saving benefit, invoke make with the option `DOCKERB_OPTS=""`.
 
  * Build the `self` project with a command like:
 
         docker exec -it self-docker-builder /self/scripts/build.sh linux
 
+### Other options
+
+To get more build output from make, set the `VERBOSE=y` build option.
+
 ### Cleanup
 
-When you're finished with the build container and image, you can execute `make distclean` in this project directory and clean up docker and other artifacts from the build process. Note that if you used Docker efficiencies when building, there may be extra, untagged Docker images on your system. Consult the Docker documentation for information on deleting such images.
+When you're finished with the build container and image, you can execute `make self_DIR=$HOME/projects/self distclean` in this project directory and clean up docker and other artifacts from the build process. Note that if you used Docker efficiencies when building, there may be extra, untagged Docker images on your system. Consult the Docker documentation for information on deleting such images.
+
+### Known problems
+
+ * The build process for non-x86 boxes fails
+ * Documentation of all build features is lacking
