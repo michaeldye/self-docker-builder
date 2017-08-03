@@ -1,0 +1,9 @@
+FROM ##from_image##
+MAINTAINER mdye@us.ibm.com
+
+ARG ARCH=##arch##
+
+RUN apt-get update
+ADD dist-self /usr/self
+RUN /bin/bash -c 'echo "/usr/self" > /etc/ld.so.conf.d/self.conf'
+CMD ["/usr/self/run_self.sh"]
